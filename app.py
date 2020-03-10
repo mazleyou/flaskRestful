@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import configparser
 import json
 
+
 config = configparser.ConfigParser()
 config.read('config.ini')
 

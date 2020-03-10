@@ -8,5 +8,6 @@ bsObject = BeautifulSoup(html, 'html.parser')
 my_titles = bsObject.select(
     'span.us.dpron-i > span.pron.dpron > span'
     )
+
 print(my_titles[0].text)
 
