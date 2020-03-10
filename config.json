@@ -1,6 +1,6 @@
 {
   "DEFAULT": {
-    "HOST_ADDR": "52.141.7.91"
+    "HOST_ADDR": "127.0.0.1"
   },
   "TEST": {
     "TEST_TMP_DIR": "tests",
