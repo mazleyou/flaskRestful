@@ -1,0 +1,9 @@
+{
+  "DEFAULT": {
+    "HOST_ADDR": "172.0.0.1"
+  },
+  "TEST": {
+    "TEST_TMP_DIR": "tests",
+    "TEST_TIMEOUT": 20
+  }
+}
