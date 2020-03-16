@@ -6,7 +6,19 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import configparser
 import json
+import werkzeug
+from flask_restplus import reqparse
+import os
+import face_api_ms
 
+from xml import parsers
+
+file_upload = reqparse.RequestParser()
+file_upload.add_argument('mp4_file',
+                         type=werkzeug.datastructures.FileStorage,
+                         location='files',
+                         required=True,
+                         help='mp4 file')
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -26,8 +38,9 @@ cursor = db.cursor()
 
 
 app = Flask(__name__) # Flask App 생성한다
-api = Api(app, version='1.0', title='phonetic translator', description='발음기호 사전') # API 만든다
-ns = api.namespace('phonetic', description='발음기호 조회, 추가') # /phonetic/ 네임스페이스를 만든다
+api = Api(app, version='1.0', title='variety api', description='python api 모음') # API 만든다
+phonetic = api.namespace('phonetic', description='발음기호 조회, 추가') # /phonetic/ 네임스페이스를 만든다
+emotion = api.namespace('emotion_detection', description='감정 이모티콘 추가') # /emotion/ 네임스페이스를 만든다
 
 # REST Api에 이용할 데이터 모델을 정의한다
 model_phonetic = api.model('row_phonetics', {
@@ -89,9 +102,9 @@ class GoodsDAO(object):
 
 DAO = GoodsDAO() # DAO 객체를 만든다
 
-@ns.route('/') # 네임스페이스 x.x.x.x/phonetic 하위 / 라우팅
+@phonetic.route('/') # 네임스페이스 x.x.x.x/phonetic 하위 / 라우팅
 class GoodsListManager(Resource):
-    @ns.marshal_list_with(model_phonetic)
+    @phonetic.marshal_list_with(model_phonetic)
     def get(self):
         '''전체 리스트 조회한다'''
         return 1
@@ -105,11 +118,11 @@ class GoodsListManager(Resource):
     #     return DAO.create(api.payload), 201
 
 
-@ns.route('/<string:engword>') # 네임스페이스 x.x.x.x/eng_word 하위 /문자 라우팅
-@ns.response(404, '단어를 찾을 수가 없어요')
-@ns.param('engword', '영어단어를 입력해주세요')
+@phonetic.route('/<string:engword>') # 네임스페이스 x.x.x.x/eng_word 하위 /문자 라우팅
+@phonetic.response(404, '단어를 찾을 수가 없어요')
+@phonetic.param('engword', '영어단어를 입력해주세요')
 class GoodsRUDManager(Resource):
-    @ns.marshal_with(model_phonetic)
+    @phonetic.marshal_with(model_phonetic)
     def get(self, engword):
         '''해당 영어단어의 발음기호를 조회한다'''
 
@@ -130,3 +143,18 @@ class GoodsRUDManager(Resource):
     # def put(self, id):
     #     '''해당 id 수정한다'''
     #     return DAO.update(id, api.payload)
+
+
+@emotion.route('/') # 네임스페이스 x.x.x.x/emotion 하위 / 라우팅
+class retImojiMovie(Resource):
+    @api.expect(file_upload)
+    def post(self):
+        '''업로드한 동영상에 감정을 검출해 해당 이모티콘 추가한다'''
+        args = file_upload.parse_args()
+        ret = 'Upload fail'
+        if args['mp4_file'].mimetype == 'video/avi' or args['mp4_file'].mimetype == 'video/mp4':
+            faceapi = face_api_ms.face_api_ms()
+            ret = faceapi.process_mov(args['mp4_file'])
+
+
+        return {'status': ret}
