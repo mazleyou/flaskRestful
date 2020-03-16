@@ -146,7 +146,7 @@ class retImojiMovie(Resource):
         '''업로드한 동영상에 감정을 검출해 해당 이모티콘 추가한다'''
         args = file_upload.parse_args()
         ret = 'Upload fail'
-        if args['mp4_file'].mimetype == 'video/avi':
+        if args['mp4_file'].mimetype == 'video/avi' or args['mp4_file'].mimetype == 'video/mp4':
             faceapi = face_api_ms.face_api_ms()
             ret = faceapi.process_mov(args['mp4_file'])
 

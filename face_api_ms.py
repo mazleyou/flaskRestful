@@ -1,13 +1,12 @@
-import binascii
+# mport binascii
 
 import requests
-import json
+# import json
 import cv2
 import io
-
+import time as Time
 import matplotlib.pyplot as plt
-import numpy as np
-
+# import numpy as np
 class face_api_ms:
     def __init__(self):
         print('face api init')
@@ -18,7 +17,7 @@ class face_api_ms:
 
         # imoji list return
         def get_imojis():
-            s_img = cv2.imread("test/fer2013/emoji-set.png", -1)
+            s_img = cv2.imread("models/emoji-set.png", -1)
             imoji_images = []
             t_start = 150
             l_start = 41
@@ -37,8 +36,10 @@ class face_api_ms:
         imojis = get_imojis()
 
         # 사용자 아이디와 시리얼 넘버로 된 파일명 변경 필요
-        mov.save("temp.avi")
-        cap = cv2.VideoCapture("temp.avi")
+        time = Time.time()
+
+        mov.save("fileserver/temp.avi")
+        cap = cv2.VideoCapture("fileserver/temp.avi")
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
         recordCount = 0
