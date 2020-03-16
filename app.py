@@ -112,7 +112,13 @@ class GoodsRUDManager(Resource):
     @ns.marshal_with(model_phonetic)
     def get(self, engword):
         '''해당 영어단어의 발음기호를 조회한다'''
-        return DAO.get(engword)
+
+        engwordList = engword.split(" ")
+        retWord = ''
+        for word in engwordList:
+            retWord += DAO.get(word)['phon_word'] + ' '
+
+        return {'eng_word': engword, 'phon_word': retWord}, 200, {'Access-Control-Allow-Origin': '*'}
 
     # def delete(self, id):
     #     '''해당 id 삭제한다'''
