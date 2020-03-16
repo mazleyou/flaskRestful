@@ -28,15 +28,6 @@ with open('config.json', 'r') as f:
 
 host_addr = config['DEFAULT']['HOST_ADDR'] # 'secret-key-of-myapp'
 
-# Open database connection
-db = pymysql.connect(host=host_addr, port=8300, user='phoneticer', passwd='taiho9788', db='phonetic_db',
-                     charset='utf8',
-                     autocommit=True)
-
-# prepare a cursor object using cursor() method
-cursor = db.cursor()
-
-
 app = Flask(__name__) # Flask App 생성한다
 api = Api(app, version='1.0', title='variety api', description='python api 모음') # API 만든다
 phonetic = api.namespace('phonetic', description='발음기호 조회, 추가') # /phonetic/ 네임스페이스를 만든다
@@ -56,6 +47,14 @@ class GoodsDAO(object):
 
     def get(self, input_eng_word):
         '''영어단어를 이용하여 발음기호를 조회한다'''
+
+        # Open database connection
+        db = pymysql.connect(host=host_addr, port=8300, user='phoneticer', passwd='taiho9788', db='phonetic_db',
+                             charset='utf8',
+                             autocommit=True)
+
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
 
         # execute SQL query using execute() method.
         sql = "select * from dict_eng_phon where engword=%s"
@@ -82,6 +81,8 @@ class GoodsDAO(object):
                 db.commit()
                 # DB에 결과가 없고 크롤링한 결과가 없으면 질의한 단어에 <>를 감싸서 리턴하고 DB에 인서트
                 return {'eng_word': input_eng_word, 'phon_word': '<'+input_eng_word+'>'}
+
+        db.close()
 
     def create(self, data):
         '''발음기호를 가져온다'''
