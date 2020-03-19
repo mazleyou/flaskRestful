@@ -37,14 +37,17 @@ class face_api_ms:
 
         # 사용자 아이디와 시리얼 넘버로 된 파일명 변경 필요
         time = Time.time()
+        time = str(int(time))
 
-        mov.save("fileserver/temp.avi")
-        cap = cv2.VideoCapture("fileserver/temp.avi")
+        mov.save("fileserver/" + time + ".mp4")
+        cap = cv2.VideoCapture("fileserver/" +  time + ".mp4")
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
         recordCount = 0
+        faces = ''
         while True:
             ret, frame = cap.read()
+
             if recordCount == 0:
                 out = cv2.VideoWriter('test/fer2013/output.avi', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
             recordCount += 1
@@ -64,32 +67,33 @@ class face_api_ms:
                 faces = response.json()
                 print(recordCount)
 
-                for ret_face in faces:
-                    x = ret_face["faceRectangle"]['left']
-                    y = ret_face["faceRectangle"]['top']
-                    w = ret_face["faceRectangle"]['width']
-                    h = ret_face["faceRectangle"]['height']
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            for ret_face in faces:
+                x = ret_face["faceRectangle"]['left']
+                y = ret_face["faceRectangle"]['top']
+                w = ret_face["faceRectangle"]['width']
+                h = ret_face["faceRectangle"]['height']
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-                    ret_emotion = ret_face["faceAttributes"]["emotion"]
-                    max_emotion = max(ret_emotion.keys(), key=(lambda k: ret_emotion[k]))
-                    imoji_index = 0
-                    if max_emotion in EMOTIONS:
-                        imoji_index = EMOTIONS.index(max_emotion)
-                    add_imoji = imojis[imoji_index]
+                ret_emotion = ret_face["faceAttributes"]["emotion"]
+                max_emotion = max(ret_emotion.keys(), key=(lambda k: ret_emotion[k]))
+                imoji_index = 0
+                if max_emotion in EMOTIONS:
+                    imoji_index = EMOTIONS.index(max_emotion)
+                add_imoji = imojis[imoji_index]
 
-                    y2 = y + add_imoji.shape[0]
-                    x2 = x + add_imoji.shape[1]
+                y2 = y + add_imoji.shape[0]
+                x2 = x + add_imoji.shape[1]
 
-                    alpha_s = add_imoji[:, :, 3] / 255.0
-                    alpha_l = 1.0 - alpha_s
+                alpha_s = add_imoji[:, :, 3] / 255.0
+                alpha_l = 1.0 - alpha_s
 
-                    for c in range(0, 3):
-                        frame[y:y2, x:x2, c] = (alpha_s * add_imoji[:, :, c] + alpha_l * frame[y:y2, x:x2, c])
+                for c in range(0, 3):
+                    frame[y:y2, x:x2, c] = (alpha_s * add_imoji[:, :, c] + alpha_l * frame[y:y2, x:x2, c])
+                    emoframe = frame
 
                     # cv2.imshow("Probabilities", frame)
                     # cv2.waitKey(0)
-            out.write(frame)
+            out.write(emoframe)
             # imagefilename = 'fer2013/face_sample.jpg'
             # image = cv2.imread(imagefilename)
             #
