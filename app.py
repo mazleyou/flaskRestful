@@ -155,7 +155,9 @@ class retImojiMovie(Resource):
         ret = 'Upload fail'
         if args['mp4_file'].mimetype == 'video/avi' or args['mp4_file'].mimetype == 'video/mp4':
             faceapi = face_api_ms.face_api_ms()
-            ret = faceapi.process_mov(args['mp4_file'])
+            ret, fileName = faceapi.process_mov(args['mp4_file'])
 
+        return {'status': ret, 'fileName': fileName}, 200, {'Access-Control-Allow-Origin': '*'}
 
-        return {'status': ret}
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

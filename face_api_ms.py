@@ -39,11 +39,11 @@ class face_api_ms:
         time = Time.time()
         time = str(int(time))
 
-        mov.save("fileserver/" + time + ".mp4")
-        cap = cv2.VideoCapture("fileserver/" +  time + ".mp4")
+        mov.save("fileserver/input/" + time + ".mp4")
+        cap = cv2.VideoCapture("fileserver/input/" +  time + ".mp4")
         # mov.save("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" + time + ".mp4")
         # cap = cv2.VideoCapture("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" +  time + ".mp4")
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        fourcc = cv2.VideoWriter_fourcc(*'H264')
 
         recordCount = 0
         faces = ''
@@ -51,8 +51,8 @@ class face_api_ms:
             ret, frame = cap.read()
 
             if recordCount == 0:
-                out = cv2.VideoWriter('output/' + time + '.mp4', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
-                # out = cv2.VideoWriter('C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\output.avi', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                out = cv2.VideoWriter('fileserver/output/' + time + '.mp4', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                # out = cv2.VideoWriter('C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\output.mp4', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
             recordCount += 1
 
             if recordCount < 500:
@@ -107,5 +107,6 @@ class face_api_ms:
                 out.release()
                 break
         cap.release()
-        return "Done"
+
+        return "Done", str(int(time)) + ".mp4"
 
