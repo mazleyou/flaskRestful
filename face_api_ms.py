@@ -41,6 +41,8 @@ class face_api_ms:
 
         mov.save("fileserver/" + time + ".mp4")
         cap = cv2.VideoCapture("fileserver/" +  time + ".mp4")
+        # mov.save("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" + time + ".mp4")
+        # cap = cv2.VideoCapture("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" +  time + ".mp4")
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
         recordCount = 0
@@ -49,7 +51,8 @@ class face_api_ms:
             ret, frame = cap.read()
 
             if recordCount == 0:
-                out = cv2.VideoWriter('test/fer2013/output.avi', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                out = cv2.VideoWriter('output/' + time + '.mp4', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                # out = cv2.VideoWriter('C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\output.avi', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
             recordCount += 1
 
             if recordCount < 500:
