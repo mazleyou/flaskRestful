@@ -43,7 +43,7 @@ class face_api_ms:
         cap = cv2.VideoCapture("fileserver/input/" +  time + ".mp4")
         # mov.save("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" + time + ".mp4")
         # cap = cv2.VideoCapture("C:\\projectWork\\2.reactNative\\flaskRestful\\\sample\\" +  time + ".mp4")
-        fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+        fourcc = cv2.VideoWriter_fourcc(*'H264')
 
         recordCount = 0
         faces = ''
