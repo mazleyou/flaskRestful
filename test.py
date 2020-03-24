@@ -7,7 +7,7 @@ import io
 import time as Time
 import matplotlib.pyplot as plt
 # import numpy as np
-cap = cv2.VideoCapture("sample/videoplayback.mp4")
+cap = cv2.VideoCapture("test/videoplayback.mp4")
 fourcc = cv2.VideoWriter_fourcc(*'avc1')
 
 recordCount = 0
