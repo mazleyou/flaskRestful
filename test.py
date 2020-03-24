@@ -1,9 +1,24 @@
-import face_api_ms
-from werkzeug.datastructures import FileStorage
-file = None
+# mport binascii
 
-with open('sample/videoplayback.mp4', 'rb') as fp:
-    file = FileStorage(fp)
+import requests
+# import json
+import cv2
+import io
+import time as Time
+import matplotlib.pyplot as plt
+# import numpy as np
+cap = cv2.VideoCapture("sample/videoplayback.mp4")
+fourcc = cv2.VideoWriter_fourcc(*'avc1')
 
-faceapi = face_api_ms.face_api_ms()
-ret = faceapi.process_mov(file)
+recordCount = 0
+faces = ''
+while True:
+    ret, frame = cap.read()
+    if recordCount == 0:
+        out = cv2.VideoWriter('test.mp4', fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+    recordCount += 1
+    out.write(frame)
+    if recordCount > 1000:
+        out.release()
+        break
+cap.release()
